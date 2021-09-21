@@ -66,7 +66,7 @@ export default {
   },
       async handleFileSubmit(file) {
       console.log("starting upload...");
-      const MY_ACCESS_TOKEN = 'sk.eyJ1IjoibGFyeW5xaSIsImEiOiJja3R0ZTlvcXMxcDF3Mm9vMmIwb2UyaTR1In0.VOcKaN3hX0CFeSL_cdJFWg';
+      const MY_ACCESS_TOKEN = '';
       const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
 
       const mbxClient = require('@mapbox/mapbox-sdk');
