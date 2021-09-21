@@ -1,8 +1,22 @@
 <template>
   <div id="employee-form">
+    <label>Shapefile upload</label>
+    <form class="upload" @submit.prevent="handleFileSubmit">
+        <input type="file" name="uploadFile" accept=".shp" required />
+        <br/><br/>
+        <input type="submit" />
+    </form>
+
+    <button class="btn btn-info" @click="onPickFile">Upload profile picture</button>
+    <input
+      type="file"
+      style="display: none"
+      ref="fileInput"
+      @change="onFilePicked"/>
+
     <form @submit.prevent="handleSubmit">
-      <label>Employee name</label>
       <!-- <input type="text" /> -->
+      <label>Employee name</label>
       <input
         ref="first"
         type="text"
@@ -47,6 +61,59 @@ export default {
     }
   },
   methods: {
+    async onPickFile () {
+  this.$refs.fileInput.click()
+  },
+      async handleFileSubmit(file) {
+      console.log("starting upload...");
+      const MY_ACCESS_TOKEN = 'sk.eyJ1IjoibGFyeW5xaSIsImEiOiJja3R0ZTlvcXMxcDF3Mm9vMmIwb2UyaTR1In0.VOcKaN3hX0CFeSL_cdJFWg';
+      const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
+
+      const mbxClient = require('@mapbox/mapbox-sdk');
+      const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
+
+
+      const uploadsClient = mbxUploads(baseClient);
+      // import * as fs from 'fs';
+
+      const AWS = require('aws-sdk');
+      const getCredentials = () => {
+        return uploadsClient
+          .createUploadCredentials()
+          .send()
+          .then(response => response.body);
+      }
+      const putFileOnS3 = (credentials) => {
+        const s3 = new AWS.S3({
+          accessKeyId: credentials.accessKeyId,
+          secretAccessKey: credentials.secretAccessKey,
+          sessionToken: credentials.sessionToken,
+          region: 'us-east-1'
+        });
+        return s3.putObject({
+          Bucket: credentials.bucket,
+          Key: credentials.key,
+          Body: file
+          // Body: fs.createReadStream('/path/to/file.mbtiles')
+        }).promise();
+      };
+      console.log(await getCredentials());
+      console.log(await getCredentials().then(putFileOnS3));
+      
+    },
+  async onFilePicked (event) {
+    const files = event.target.files
+    let filename = files[0].name
+    const fileReader = new FileReader()
+    fileReader.addEventListener('load', () => {
+      this.imageUrl = fileReader.result
+    })
+    fileReader.readAsDataURL(files[0])
+    this.image = files[0]
+    console.log(filename);
+    await handleFileSubmit(this.image);
+  },
+
     handleSubmit() {
       console.log('testing handleSubmit')
       this.submitting = true
