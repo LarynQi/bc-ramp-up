@@ -1,8 +1,8 @@
 <template>
   <div id="employee-form">
     <label>Shapefile upload</label>
-    <form class="upload" @submit.prevent="handleFileSubmit">
-        <input type="file" name="uploadFile" accept=".shp" required />
+    <form class="upload" @submit.prevent="handleFileSubmit" @change="previewFiles" >
+        <input type="file" name="uploadFile" accept=".zip" required />
         <br/><br/>
         <input type="submit" />
     </form>
@@ -58,20 +58,21 @@ export default {
         name: '',
         email: '',
       },
+      selectedFile: null,
     }
   },
   methods: {
     async onPickFile () {
   this.$refs.fileInput.click()
   },
-      async handleFileSubmit(file) {
+    async handleFileSubmit() {
       console.log("starting upload...");
-      const MY_ACCESS_TOKEN = '';
+      // console.log(event.target.files);
+      const MY_ACCESS_TOKEN = 'sk.eyJ1IjoibGFyeW5xaSIsImEiOiJja3R0ZTlvcXMxcDF3Mm9vMmIwb2UyaTR1In0.VOcKaN3hX0CFeSL_cdJFWg';
       const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
 
       const mbxClient = require('@mapbox/mapbox-sdk');
       const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
-
 
       const uploadsClient = mbxUploads(baseClient);
       // import * as fs from 'fs';
@@ -93,26 +94,50 @@ export default {
         return s3.putObject({
           Bucket: credentials.bucket,
           Key: credentials.key,
-          Body: file
+          Body: this.selectedFile
           // Body: fs.createReadStream('/path/to/file.mbtiles')
         }).promise();
       };
-      console.log(await getCredentials());
-      console.log(await getCredentials().then(putFileOnS3));
+      // console.log(await getCredentials());
+      // let credentials = await getCredentials();
+      // console.log(credentials);
+      // credentials = putFileOnS3(credentials);
+      // response.then(console.log);
+      // response.then((res) => console.log(res));
+      const credentials = await getCredentials();
+      putFileOnS3(credentials);
+
+      const myUsername = 'larynqi';
+      const myTileset = 'myTileset'
+      // const credentials = uploadsClient.createUploadCredentials();
+      uploadsClient.createUpload({
+        tileset: `${myUsername}.${myTileset}`,
+        url: credentials.url,
+        name: 'JMLQ UPLOAD0',
+      })
+        .send()
+        .then(response => {
+          const upload = response.body;
+          console.log(upload);
+        });
       
     },
-  async onFilePicked (event) {
-    const files = event.target.files
-    let filename = files[0].name
-    const fileReader = new FileReader()
-    fileReader.addEventListener('load', () => {
-      this.imageUrl = fileReader.result
-    })
-    fileReader.readAsDataURL(files[0])
-    this.image = files[0]
-    console.log(filename);
-    await handleFileSubmit(this.image);
-  },
+  // async onFilePicked (event) {
+  //   const files = event.target.files
+  //   let filename = files[0].name
+  //   const fileReader = new FileReader()
+  //   fileReader.addEventListener('load', () => {
+  //     this.imageUrl = fileReader.result
+  //   })
+  //   fileReader.readAsDataURL(files[0])
+  //   this.image = files[0]
+  //   console.log(filename);
+  //   await handleFileSubmit(this.image);
+  // },
+
+  async previewFiles(event) {
+    this.selectedFile = event.target.files[0];
+  }, 
 
     handleSubmit() {
       console.log('testing handleSubmit')

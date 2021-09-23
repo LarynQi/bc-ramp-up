@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <!-- <tbody> -->
-        <!-- <tr>
+        <!-- <tr> 
           <td>Richard Hendricks</td>
           <td>richard@piedpiper.com</td>
         </tr>
