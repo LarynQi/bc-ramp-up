@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="small-container">
     <h1>Visualize a Shapefile from Berkeley</h1>
-
+    <map-visualizer />
     <employee-form @add:employee="addEmployee" />
     <employee-table
       :employees="employees"
@@ -16,12 +16,14 @@
   import EmployeeTable from '@/components/EmployeeTable.vue'
 // import EmployeeTable from './components/EmployeeTable.vue'
   import EmployeeForm from '@/components/EmployeeForm.vue'
+  import MapVisualizer from '@/components/MapVisualizer.vue'
 
   export default {
     name: 'app',
     components: {
       EmployeeTable,
-      EmployeeForm
+      EmployeeForm,
+      MapVisualizer
     },
     data() {
       return {
