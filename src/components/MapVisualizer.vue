@@ -28,6 +28,12 @@ export default {
   methods: {
     async getStatus() {
       console.log("STARTED GET STATUS");
+      if (this.uploadsClient == null) {
+        const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
+        const mbxClient = require('@mapbox/mapbox-sdk');
+        const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
+        this.uploadsClient  = mbxUploads(baseClient);
+      }
       const status = await this.uploadsClient.listUploads()
       .send()
       .then(response => {
