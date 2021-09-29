@@ -31,7 +31,7 @@ export default {
       if (this.uploadsClient == null) {
         const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
         const mbxClient = require('@mapbox/mapbox-sdk');
-        const MY_ACCESS_TOKEN = 'sk.eyJ1IjoibGFyeW5xaSIsImEiOiJja3R0ZTlvcXMxcDF3Mm9vMmIwb2UyaTR1In0.VOcKaN3hX0CFeSL_cdJFWg';
+        const MY_ACCESS_TOKEN = '';
         const baseClient = mbxClient({ accessToken: MY_ACCESS_TOKEN });
         this.uploadsClient  = mbxUploads(baseClient);
       }
@@ -52,7 +52,7 @@ export default {
     async handleFileSubmit() {
       console.log("starting upload...");
 
-      const MY_ACCESS_TOKEN = 'sk.eyJ1IjoibGFyeW5xaSIsImEiOiJja3R0ZTlvcXMxcDF3Mm9vMmIwb2UyaTR1In0.VOcKaN3hX0CFeSL_cdJFWg';
+      const MY_ACCESS_TOKEN = '';
       // const MY_ACCESS_TOKEN = '';
       const mbxUploads = require('@mapbox/mapbox-sdk/services/uploads');
       const mbxClient = require('@mapbox/mapbox-sdk');
@@ -155,7 +155,8 @@ export default {
     },
     initMap() {
       const mapboxgl = require('mapbox-gl');
-      const PUB_ACCESS_TOKEN = 'pk.eyJ1IjoibGFyeW5xaSIsImEiOiJjazZuMXJybDAwcjE4M2twYnUxOTZlMTlrIn0.EcaBQUDtZgzh-nMyVTZ02w';      mapboxgl.accessToken = PUB_ACCESS_TOKEN;
+      const PUB_ACCESS_TOKEN = '';
+      mapboxgl.accessToken = PUB_ACCESS_TOKEN;
       this.map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
